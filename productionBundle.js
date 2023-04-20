@@ -1755,7 +1755,7 @@ let appenderArray = [];
 
 /**
  * Clears the current appender array.
- * @returns {Array} - the last value before clearing
+ * @returns {Array} - the pos value before clearing
  */
 const reset$1 = () => {
   const currentAppenderArray  = appenderArray;
