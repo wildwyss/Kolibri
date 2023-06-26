@@ -63,14 +63,19 @@ exampleSuite.add("Pythagorean Triples 3", assert => {
     assert.iterableEq([3,4,5], /** @type { Iterable } */ head (result));
 });
 
+const intersperse = inner => sequence => drop (1) (sequence.and( value => cons (inner) (PureSequence(value))));
+
 exampleSuite.add("intersperse", assert => {
-
-    const intersperse = inner => sequence => drop (1) (sequence.and( value => cons (inner) (PureSequence(value))));
-
     assert.iterableEq( nil,                     intersperse( 42) (nil));
     assert.iterableEq([0],                      intersperse( 42) (Range(0)));
     assert.iterableEq([0, 42, 1, 42, 2, 42, 3], intersperse( 42) (Range(3)));
 });
+
+const iterateAsync = executorSequence => {
+    if (isEmpty(executorSequence)) return;
+    // noinspection JSCheckFunctionSignatures // it appears that ExecutorFunction is not known as the Promise Parameter Type
+    new Promise(head(executorSequence)).then( _ => iterateAsync(drop (1) (executorSequence)));
+};
 
 exampleSuite.add("Stairs", assert => {
     const Point = (x,y)     => ({x,y});
@@ -82,23 +87,18 @@ exampleSuite.add("Stairs", assert => {
 
     assert.is(head(doodle).a.x, 10);
 
-    const iterateAsync = executorSequence => {
-        if (isEmpty(executorSequence)) return;
-        // noinspection JSCheckFunctionSignatures // it appears that ExecutorFunction is not known as the Promise Parameter Type
-        new Promise(head(executorSequence)).then( _ => iterateAsync(drop (1) (executorSequence)));
-    };
+    const logPoint = ({a}) =>
+        (resolve, _reject) => { console.log(a.x, a.y); resolve(); };
 
-    const waitAndLogPoint = ({a}) =>
-        (resolve, _reject) =>
-            setTimeout( _=> {
-                console.log(a.x, a.y);
-                resolve();
-            }, 1000)
-        ;
-    const slowDoodle = map (waitAndLogPoint) (doodle);
+    const wait = millis =>
+        (resolve, _reject) => setTimeout( _=> resolve(), millis);
+
+    const logDoodle  = map         (logPoint)   (doodle);
+    const slowDoodle = intersperse (wait(500)) (logDoodle);
 
     console.log("--------- asynchronous ");
-    iterateAsync (take (10) (slowDoodle));
+    iterateAsync (take (10) (logDoodle));
+    iterateAsync (take (20) (slowDoodle));
 
 });
 
