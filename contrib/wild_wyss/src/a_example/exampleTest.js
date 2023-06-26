@@ -5,13 +5,8 @@ import {head}      from "../sequence/terminalOperations/head/head.js";
 
 import {from}         from "../jinq/jinq.js";
 import {retainAll}    from "../sequence/operators/retainAll/retainAll.js";
-import {Sequence}     from "../sequence/constructors/sequence/Sequence.js";
-import {take}         from "../sequence/operators/take/take.js";
-import {isEmpty}      from "../sequence/terminalOperations/isEmpty/isEmpty.js";
-import {drop}         from "../sequence/operators/drop/drop.js";
-import {PureSequence} from "../sequence/constructors/pureSequence/pureSequence.js";
-import {cons}         from "../sequence/operators/cons/cons.js";
 import {nil}          from "../sequence/constructors/nil/nil.js";
+import {intersperse}  from "./util.js";
 
 const exampleSuite = TestSuite("Example Suite");
 
@@ -63,12 +58,10 @@ exampleSuite.add("Pythagorean Triples 3", assert => {
     assert.iterableEq([3,4,5], /** @type { Iterable } */ head (result));
 });
 
-const intersperse = inner => sequence => drop (1) (sequence.and( value => cons (inner) (PureSequence(value))));
-
 exampleSuite.add("intersperse", assert => {
-    assert.iterableEq( nil,                     intersperse( 42) (nil));
-    assert.iterableEq([0],                      intersperse( 42) (Range(0)));
-    assert.iterableEq([0, 42, 1, 42, 2, 42, 3], intersperse( 42) (Range(3)));
+    assert.iterableEq( nil,                     intersperse (42) (nil));
+    assert.iterableEq([0],                      intersperse (42) (Range(0)));
+    assert.iterableEq([0, 42, 1, 42, 2, 42, 3], intersperse (42) (Range(3)));
 });
 
 const iterateAsync = executorSequence => {
@@ -77,29 +70,5 @@ const iterateAsync = executorSequence => {
     new Promise(head(executorSequence)).then( _ => iterateAsync(drop (1) (executorSequence)));
 };
 
-exampleSuite.add("Stairs", assert => {
-    const Point = (x,y)     => ({x,y});
-    const Quad  = (a,b,c,d) => ({a,b,c,d});
-    const start = Quad( Point(10,10), Point(10,-10), Point(-10,-10), Point(-10,10) );
-    const forever = _p => true;
-    const produce = ({a,b,c,d}) => Quad( b, c, d, Point( d.x + (a.x-d.x)*1.05, d.y + (a.y-d.y)*1.05));
-    const doodle = Sequence(start, forever, produce);
-
-    assert.is(head(doodle).a.x, 10);
-
-    const logPoint = ({a}) =>
-        (resolve, _reject) => { console.log(a.x, a.y); resolve(); };
-
-    const wait = millis =>
-        (resolve, _reject) => setTimeout( _=> resolve(), millis);
-
-    const logDoodle  = map         (logPoint)   (doodle);
-    const slowDoodle = intersperse (wait(500)) (logDoodle);
-
-    console.log("--------- asynchronous ");
-    iterateAsync (take (10) (logDoodle));
-    iterateAsync (take (20) (slowDoodle));
-
-});
 
 exampleSuite.run();
