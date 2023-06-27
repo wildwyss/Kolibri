@@ -1,12 +1,11 @@
 
 // TODO: for some reason, nil must be imported before Sequence, even if we don't use it, when using Promises
 import {nil}                                     from "../../sequence/constructors/nil/nil.js"; // do not remove
-import {Sequence}                                from "../../sequence/constructors/sequence/Sequence.js";
-import {action, intersperse, iterateAsync, wait} from "../util.js";
-import {map}                                     from "../../sequence/operators/map/map.js";
+import {Sequence}                                          from "../../sequence/constructors/sequence/Sequence.js";
+import {action, intersperse, iterateAsync, keepEven, wait} from "../util.js";
+import {map}                                               from "../../sequence/operators/map/map.js";
 import {take}                                    from "../../sequence/operators/take/take.js";
 import {drop}                                    from "../../sequence/operators/drop/drop.js";
-import {pipe}                                    from "../../sequence/operators/pipe/pipe.js";
 
 export { start }
 
@@ -16,7 +15,7 @@ export { start }
  */
 const start = canvasElement => {
 
-    // production
+    // pure production
     const Point   = (x,y)     => ({x,y});
     const Trail   = (a,b,c,d) => ({a,b,c,d});
     const start   = Trail( Point(-10,10), Point(-10,-10), Point(10,-10), Point(9.5,9.5) );
@@ -25,17 +24,22 @@ const start = canvasElement => {
     const step    = ({a,b,c,d})  => Trail(bearing(a)(d), a, b, c );
     const trails  = Sequence(start, forever, step);
 
-    // consumption
-    const ctx       = canvasElement.getContext('2d');
-    const centerx   = canvasElement.width  / 2;
-    const centery   = canvasElement.height / 2;
-    const paintPoint = action ( ({a,b}) => {
+    const ctx        = canvasElement.getContext('2d');
+    const centerx    = canvasElement.width  / 2;
+    const centery    = canvasElement.height / 2;
+    const drawAction = action ( ({a,b}) => {
         ctx.moveTo(centerx + a.x, centery + a.y);
         ctx.lineTo(centerx + b.x, centery + b.y);
         ctx.stroke();
     })  ;
+    const doodle = map (drawAction) (trails);
 
-    const doodle = map (paintPoint) (trails);
-
-    iterateAsync ( doodle.pipe ( drop(50), take (206), intersperse (wait(20))) );
+    // consumption with customizable effect
+    iterateAsync ( doodle.pipe (
+        // comment / uncomment / modify to see various effects
+        drop (5),
+        take (300),
+        // keepEven,
+        intersperse (wait(20))
+    ) );
 };

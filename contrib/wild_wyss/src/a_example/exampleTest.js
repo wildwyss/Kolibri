@@ -2,11 +2,11 @@ import {TestSuite} from "../test/test.js";
 import {Range}     from "../sequence/constructors/range/range.js";
 import {map}       from "../sequence/operators/map/map.js";
 import {head}      from "../sequence/terminalOperations/head/head.js";
-
 import {from}         from "../jinq/jinq.js";
 import {retainAll}    from "../sequence/operators/retainAll/retainAll.js";
 import {nil}          from "../sequence/constructors/nil/nil.js";
-import {intersperse}  from "./util.js";
+import {take}         from "../sequence/operators/take/take.js";
+import {intersperse, keepEven }  from "./util.js";
 
 const exampleSuite = TestSuite("Example Suite");
 
@@ -65,11 +65,17 @@ exampleSuite.add("intersperse", assert => {
     assert.iterableEq([0, 42, 1, 42, 2, 42, 3], intersperse (42) (Range(3)));
 });
 
-const iterateAsync = executorSequence => {
-    if (isEmpty(executorSequence)) return;
-    // noinspection JSCheckFunctionSignatures // it appears that ExecutorFunction is not known as the Promise Parameter Type
-    new Promise(head(executorSequence)).then( _ => iterateAsync(drop (1) (executorSequence)));
-};
+exampleSuite.add("infinite zip", assert => {
 
+    const result =
+        Range(Number.MAX_VALUE).pipe(
+            keepEven  ,
+            take (3)
+        );
+    assert.iterableEq([0, 2, 4], result);
+    assert.iterableEq(nil,       keepEven(nil));
+    assert.iterableEq([0],       keepEven(Range(0)));
+    assert.iterableEq([0],       keepEven(Range(1)));
+});
 
 exampleSuite.run();

@@ -3,8 +3,12 @@ import {cons}         from "../sequence/operators/cons/cons.js";
 import {PureSequence} from "../sequence/constructors/pureSequence/pureSequence.js";
 import {isEmpty}      from "../sequence/terminalOperations/isEmpty/isEmpty.js";
 import {head}         from "../sequence/terminalOperations/head/head.js";
+import {zip}          from "../sequence/operators/zip/zip.js";
+import {cycle}        from "../sequence/operators/cycle/cycle.js";
+import {retainAll}    from "../sequence/operators/retainAll/retainAll.js";
+import {map}          from "../sequence/operators/map/map.js";
 
-export { intersperse, iterateAsync, action, wait }
+export { intersperse, iterateAsync, action, wait, keepEven }
 
 const intersperse = inner => sequence => drop (1) (sequence.and( value => cons (inner) (PureSequence(value))));
 
@@ -25,3 +29,10 @@ const action = f => x => (resolve, reject) => {
 };
 
 const wait = millis => (resolve, _reject) => setTimeout( _=> resolve(), millis);
+
+const keepEven = sequence =>
+    sequence.pipe(
+        zip       ( cycle ([true, false])),             // pair with true/false
+        retainAll ( ([keep, _val]) => keep ),           // keep all even entries
+        map       ( ([_keep, val]) => val  ),           // unpack the pair
+    );
