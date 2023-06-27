@@ -37,5 +37,5 @@ const start = canvasElement => {
 
     const doodle = map (paintPoint) (trails);
 
-    iterateAsync (pipe ( drop(50), take (206), intersperse (wait(20))) (doodle));
+    iterateAsync ( doodle.pipe ( drop(50), take (206), intersperse (wait(20))) );
 };

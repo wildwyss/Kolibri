@@ -49,11 +49,12 @@ exampleSuite.add("Pythagorean Triples 2", assert => {
 exampleSuite.add("Pythagorean Triples 3", assert => {
 
     const result =
-        retainAll( ([x,y,z]) => x*x + y*y === z*z ) (
-            Range(1, Number.MAX_VALUE)
+        Range(1, Number.MAX_VALUE)
             .and ( z => Range(1, z)
             .and ( y => map (x => [x,y,z]) (Range(1,y))
-        )));
+        )).pipe(
+            retainAll( ([x,y,z]) => x*x + y*y === z*z )
+        );
 
     assert.iterableEq([3,4,5], /** @type { Iterable } */ head (result));
 });
