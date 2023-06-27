@@ -24,4 +24,4 @@ const action = f => x => (resolve, reject) => {
     }
 };
 
-const wait   = millis => (resolve, _reject) => setTimeout( _=> resolve(), millis);
+const wait = millis => (resolve, _reject) => setTimeout( _=> resolve(), millis);

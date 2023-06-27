@@ -1,5 +1,5 @@
 import {TestSuite} from "../test/test.js";
-import {Range}     from "../range/range.js";
+import {Range}     from "../sequence/constructors/range/range.js";
 import {map}       from "../sequence/operators/map/map.js";
 import {head}      from "../sequence/terminalOperations/head/head.js";
 
