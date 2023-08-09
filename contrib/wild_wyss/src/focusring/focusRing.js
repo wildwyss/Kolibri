@@ -1,68 +1,71 @@
-import { ArrayIterator, Iterator } from "../iterator/iterator.js";
+import {
+  nil,
+  reverse$,
+  cons,
+  drop,
+  eq$,
+  head,
+  isEmpty,
+} from "../sequence/sequence.js"
 
 export { FocusRing }
 
 /**
  * Constructs a new immutable focus ring.
- * @template _T_
- * @param   { !IteratorType<_T_> } nonEmptyIterator - A finite iterator which has at least one element.
- * @returns { FocusRingType<_T_> }
+ *
  * @constructor
+ * @template _T_
+ * @param   { !Iterable<_T_> } nonEmptyIterable - A finite {@link Iterable} which has at least one element.
+ * @returns { FocusRingType<_T_> }
  */
-const FocusRing = nonEmptyIterator => FocusRingInternal(
-  emptyIterator,
-  nonEmptyIterator.copy() // paranoid
+const FocusRing = nonEmptyIterable => FocusRingInternal(
+  nil,
+  nonEmptyIterable
 );
 
 /**
- * @template _T_
- * @type {IteratorType<_T_>}
- */
-const emptyIterator =
-  Iterator(undefined, _ => undefined, _ => true);
-
-/**
- * Constructs a new immutable focus ring using the given iterators.
- * @template _T_
- * @param   { !IteratorType<_T_> } pre  - a finite iterator
- * @param   { !IteratorType<_T_> } post - a finite iterator which has at least one element, it's head is the focus.
- * @returns { FocusRingType<_T_> }
+ * Constructs a new immutable focus ring using the given {@link Iterable}.
+ *
  * @constructor
+ * @template _T_
+ * @param   { !Iterable<_T_> } pre  - a finite iterable
+ * @param   { !Iterable<_T_> } post - a finite iterable which has at least one element, it's head is the focus.
+ * @returns { FocusRingType<_T_> }
  */
 const FocusRingInternal = (pre, post) => {
-  const focus = () => post.head();
+  const focus = () => head(post);
 
   const right = () => {
-    const currentFocus = post.head();
-    const modifiedPost = post.copy().drop(1);
+    const currentFocus = head(post);
+    const modifiedPost = drop(1)(post);
 
-    if (modifiedPost.eq$(emptyIterator)) {
-      if (pre.eq$(emptyIterator)) {
+    if (eq$(modifiedPost)(nil)) {
+      if (eq$(pre)(nil)) {
         // do nothing when only one element in list
         return FocusRingInternal(pre, post);
       }
       return FocusRingInternal(
-        ArrayIterator([currentFocus]),
-        pre.reverse$()
+        [currentFocus],
+        reverse$(pre)
       );
     }
-    const modifiedPre = pre.copy().cons$(currentFocus); // paranoid 2
+    const modifiedPre = cons(currentFocus)(pre);
     return FocusRingInternal(modifiedPre, modifiedPost);
   };
 
   const left = () => {
-    let modifiedPre   = pre.copy();
-    let modifiedPost  = post.copy();
+    let modifiedPre  = pre;
+    let modifiedPost = post;
 
-    if (pre.isEmpty()) {
-      modifiedPost = emptyIterator;
-      modifiedPre = post.copy().reverse$();
+    if (isEmpty(pre)) {
+      modifiedPost = nil;
+      modifiedPre  = reverse$(post);
     }
 
     // remove head from pre and add it to post
-    const headPre = modifiedPre.head();
-    modifiedPre   = modifiedPre.drop(1);
-    modifiedPost  = modifiedPost.cons$(headPre);
+    const headPre = head(modifiedPre);
+    modifiedPre   = drop(1)(modifiedPre);
+    modifiedPost  = cons(headPre)(modifiedPost);
 
     return FocusRingInternal(modifiedPre, modifiedPost);
   };

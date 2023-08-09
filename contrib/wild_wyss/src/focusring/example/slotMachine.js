@@ -1,7 +1,7 @@
-import { FocusRing }      from "../focusRing.js";
-import { ArrayIterator }  from "../../iterator/iterator.js";
-import { Observable }     from "../../../../../docs/src/kolibri/observable.js"
-import { Range }          from "../../range/range.js";
+import { FocusRing }  from "../focusRing.js";
+import { pipe, map }  from "../../sequence/sequence.js";
+import { Observable } from "../../../../../docs/src/kolibri/observable.js"
+import { Range }      from "../../sequence/sequence.js";
 
 export { SlotMachineController, ROTATION_SPEED }
 
@@ -13,7 +13,7 @@ const WHEEL_COUNT    = 3;
  * The model manages the data held in the observables.
  *
  * @param  { Array<String> } slotChars
- * @return { SlotMachineModelType }
+ * @returns { SlotMachineModelType }
  * @constructor
  */
 const SlotMachineModel = slotChars => {
@@ -33,9 +33,10 @@ const SlotMachineModel = slotChars => {
 
   /** @type {Array<IObservable<FocusRingType>>} */
   const wheels = [
-    ...Range(WHEEL_COUNT-1)
-    .map(_ => FocusRing(ArrayIterator(shuffle(slotChars))))
-    .map(Observable)
+    ...pipe(
+      map(_ => FocusRing(shuffle(slotChars))),
+      map(Observable)
+    )(Range(WHEEL_COUNT-1))
   ];
 
   return {
@@ -49,7 +50,7 @@ const SlotMachineModel = slotChars => {
 /**
  * Processes the actions from the user interface and manages the model.
  *
- * @return { SlotMachineControllerType }
+ * @returns { SlotMachineControllerType }
  * @constructor
  */
 const SlotMachineController = () => {
@@ -90,4 +91,3 @@ const SlotMachineController = () => {
     startEngine,
   }
 };
-

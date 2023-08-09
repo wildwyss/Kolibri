@@ -77,7 +77,7 @@ let appenderArray = [];
 
 /**
  * Clears the current appender array.
- * @returns {Array} - the last value before clearing
+ * @returns {Array} - the pos value before clearing
  */
 const reset = () => {
   const currentAppenderArray  = appenderArray;
@@ -101,7 +101,7 @@ const getValue = () => appenderArray;
  */
 const appenderCallback = limit => onOverflow => msg =>
   LazyIf(full(limit))
-    // if the array is full, call the overflow function and add the new value afterwards.
+    // if the array is full, call the overflow function and add the new value afterward.
     (Then(() => append(msg)(limit)(onOverflow)))
     // in any other case just append the new message.
     (Else(() => append(msg)(limit)(    id    )));

@@ -80,7 +80,7 @@ const getValue = () => logObservable;
 
 /**
  *
- * @return { IObservable<stack> }
+ * @returns { IObservable<stack> }
  */
 const reset = () => {
   const lastValue = logObservable.getValue();
@@ -101,7 +101,7 @@ const reset = () => {
  */
 const appenderCallback = type => limit => onOverflow => msg =>
   LazyIf(full(limit))
-    // if the stack is full, call the overflow function and add the new value afterwards.
+    // if the stack is full, call the overflow function and add the new value afterward.
     (Then(() => append(type)(msg)(limit)(onOverflow)))
     // in any other case just append the new message.
     (Else(() => append(type)(msg)(limit)(id)));

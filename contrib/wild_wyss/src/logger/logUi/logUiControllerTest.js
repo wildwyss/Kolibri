@@ -1,7 +1,7 @@
 import { snd }              from "../lamdaCalculus.js";
 import { pop }              from "../../../../p6_brodwolf_andermatt/src/stack/stack.js";
 import { Appender }         from "../appender/observableAppender.js";
-import { TestSuite }        from "../../../../../docs/src/kolibri/util/test.js";
+import { TestSuite }        from "../../test/test.js";
 import { LogUiModel }       from "./logUiModel.js";
 import { LogUiController }  from "./logUiController.js";
 import {
@@ -121,7 +121,7 @@ logUiControllerSuite.add("test filter message by log level", assert => {
   appender.debug(logMessage2);
   assert.is(message(snd), logMessage1);
   controller.flipLogLevel(debugLevel);
-  // Now debug level is enabled again, so the last logged message should be on top of the stack
+  // Now debug level is enabled again, so the pos logged message should be on top of the stack
   assert.is(message(snd), logMessage2);
 
   cleanUp(controller);
