@@ -263,7 +263,7 @@ Number.prototype.times = function(callback= undefined){ return times(this)(callb
  * ["1"].sum(Number); // 1
  */
 Array.prototype.sum = function(callback = undefined){ return sum(this)(callback); };/**
- * @typedef { <_T_> (newValue:_T_, oldValue: ?_T_) => void } ValueChangeCallback<_T_>
+ * @typedef { <_T_> (newValue:_T_, oldValue: ?_T_) => void } ValueChangeCallback
  * This is a specialized {@link ConsumerType} with an optional second value.
  * The "oldValue" contains the value before the change.
  */
@@ -274,7 +274,7 @@ Array.prototype.sum = function(callback = undefined){ return sum(this)(callback)
  * Observers are not garbage-collected before the observable itself is collected.
  * IObservables are intended to be used with the concept of "stable binding", i.e. with
  * listeners that do not change after setup.
- * @typedef IObservable<_T_>
+ * @typedef IObservable
  * @template _T_
  * @impure   Observables change their inner state (value) and maintain a list of observers that changes over time.    
  * @property { ()  => _T_ }   getValue - a function that returns the current value
@@ -375,22 +375,22 @@ const ObservableList = list => {
  */
 
 /**
- * @typedef { <_T_> (...x) => _T_ } ProducerType<_T_>
+ * @typedef { <_T_> (...x) => _T_ } ProducerType
  * A function that takes arbitrary arguments (possibly none) and produces a value of type _T_.
  */
 
 /**
- * @typedef { <_T_> (_T_) => void } ConsumerType<_T_>
+ * @typedef { <_T_> (_T_) => void } ConsumerType
  * A function that consumes a value of type _T_ and returns nothing.
  */
 
 /**
- * @typedef { <_T_> (_T_) => Boolean } ConsumingPredicateType<_T_>
+ * @typedef { <_T_> (_T_) => Boolean } ConsumingPredicateType
  * A function that consumes a value of type _T_ and returns a Boolean.
  */
 
 /**
- * @typedef { <_T_>  (_T_) => _T_ } UnaryOperatorType<_T_>
+ * @typedef { <_T_>  (_T_) => _T_ } UnaryOperatorType
  * A unary operator on _T_.
  *//**
  * @module projector/projectorUtils
