@@ -92,7 +92,7 @@ const ruleTextProjector = rule => {
  * @returns { HTMLElement }
  */
 const ruleProjector = rule => {
-  const [container]= dom(`<div class="rulesGrid"></div>`)
+  const [container]= dom(`<div class="rulesGrid"></div>`);
   container.append(
     ruleNrProjector(rule),
     ruleTextProjector(rule)
