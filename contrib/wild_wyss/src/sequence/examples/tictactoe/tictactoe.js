@@ -162,8 +162,8 @@ const gameTree = board => buildTree(moves)(board);
  * @returns Number
  */
 const staticEval = board => {
-  if (hasWon(board)(Computer)) return 5.0;
-  if (hasWon(board)(Human))    return -5.0;
+  if (hasWon(board)(Computer)) return 1.0;
+  if (hasWon(board)(Human))    return -1.0;
   return 0.0;
 };
 
