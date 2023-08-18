@@ -245,6 +245,7 @@ const asyncTest = (name, asyncCallback) => {
  * @typedef { Object } TestSuiteType
  * @property { (testName:String, callback:TestCallback) => void} test - running a test function for this suite
  * @property { (testName:String, callback:TestCallback) => void} add  - adding a test function for later execution
+ * @property { () => void} run                                        - runs the given test suite
  * @property { function(): void } run:                                - running and reporting the suite
  */
 /**
