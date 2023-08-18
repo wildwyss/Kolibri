@@ -58,7 +58,7 @@
 /**
  * @template _T_
  * @callback ArrayApplierType
- * @param Array<_T_>
+ * @param { Array<_T_> } arr
  * @returns any
  */
 

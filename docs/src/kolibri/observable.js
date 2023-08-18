@@ -4,7 +4,7 @@ import "./util/array.js"
 export {Observable, ObservableList}
 
 /**
- * @typedef { <_T_> (newValue:_T_, oldValue: ?_T_) => void } ValueChangeCallback<_T_>
+ * @typedef { <_T_> (newValue:_T_, oldValue: ?_T_) => void } ValueChangeCallback
  * This is a specialized {@link ConsumerType} with an optional second value.
  * The "oldValue" contains the value before the change.
  */
@@ -15,7 +15,7 @@ export {Observable, ObservableList}
  * Observers are not garbage-collected before the observable itself is collected.
  * IObservables are intended to be used with the concept of "stable binding", i.e. with
  * listeners that do not change after setup.
- * @typedef IObservable<_T_>
+ * @typedef IObservable
  * @template _T_
  * @impure   Observables change their inner state (value) and maintain a list of observers that changes over time.    
  * @property { ()  => _T_ }   getValue - a function that returns the current value

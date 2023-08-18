@@ -1,4 +1,3 @@
-import { ILLEGAL_ARGUMENT_EMPTY_ITERABLE } from "../../util/errorMessages.js";
 import { safeMax$ }                        from "../max/safeMax.js";
 
 export { safeMin$ }

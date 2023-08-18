@@ -7,7 +7,6 @@ import {
   hasWon,
   Human,
   moves,
-  nextBoard,
   NoPlayer,
   opponent,
   stone,
@@ -130,16 +129,6 @@ testSuite.add("test treemap", assert => {
   assert.iterableEq([h1, h2, h3, h4], [10, 4, 6, 2])
 });
 
-
-testSuite.add("test nextBoard", assert => {
-  const f = [
-    1, 1, -1,
-    -1, -1, 1,
-    1, -1, 0
-  ];
-  const {whosTurn, fields} = nextBoard(4)(f);
-  console.log(whosTurn, ...fields);
-});
 
 testSuite.add("test evaluate", assert => {
   // Computer has no chance here - it must lay its stone in the lower right corner nad in the middle line on the left side
